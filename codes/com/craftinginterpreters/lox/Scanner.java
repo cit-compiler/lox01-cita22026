@@ -123,8 +123,14 @@ public class Scanner {
 
     private void string() {
         while (peek() != '"' && !isAtEnd()) {
-            if (peek() == '\n')
+            if (peek() == '\n') {
                 line++;
+            }
+
+            if (peek() == '\\' && peekNext() == '"') {
+                advance();
+            }
+
             advance();
         }
 
@@ -133,10 +139,8 @@ public class Scanner {
             return;
         }
 
-        // The closing ".
         advance();
 
-        // Trim the surrounding quotes.
         String value = source.substring(start + 1, current - 1);
         addToken(STRING, value);
     }
