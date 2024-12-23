@@ -51,6 +51,5 @@ public class AstPrinter implements Expr.Visitor<String> {
                         new Expr.Literal(45.67)));
 
         System.out.println(new AstPrinter().print(expression));
-        //
     }
 }
