@@ -47,16 +47,15 @@ public class Lox {
     private static void run(String source) {
         Scanner scanner = new Scanner(source); // Scanner のクラスが存在することを確認
         List<Token> tokens = scanner.scanTokens(); // Token のクラスが存在することを確認
-        /*
-         * Parser parser = new Parser(tokens);
-         * Expr expression = parser.parse();
-         * 
-         * // Stop if there was a syntax error.
-         * if (hadError)
-         * return;
-         * 
-         * System.out.println(new AstPrinter().print(expression));
-         */
+
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
+
+        // Stop if there was a syntax error.
+        if (hadError)
+            return;
+
+        System.out.println(new AstPrinter().print(expression));
 
         // トークンの印字
         for (Token token : tokens) {
