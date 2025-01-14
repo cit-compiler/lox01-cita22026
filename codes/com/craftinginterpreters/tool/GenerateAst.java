@@ -13,10 +13,21 @@ public class GenerateAst {
         }
         String outputDir = args[0];
         defineAst(outputDir, "Expr", Arrays.asList(
+                // 8.4.1
+                "Assign   : Token name, Expr value",
                 "Binary   : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
-                "Unary    : Token operator, Expr right"));
+                "Unary    : Token operator, Expr right",
+                "Variable : Token name"));
+        // 8.1.1~
+        defineAst(outputDir, "Stmt", Arrays.asList(
+                // 8.5.2~
+                "Block      : List<Stmt> statements",
+                "Expression : Expr expression",
+                "Print      : Expr expression",
+                // 8.2.1~
+                "Var        : Token name, Expr initializer"));
 
     }
 

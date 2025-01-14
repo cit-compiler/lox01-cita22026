@@ -8,9 +8,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class Lox {
+import com.craftinginterpreters.lox.InterPreter.Interpreter;
 
+public class Lox {
+    // 7.4.2~
+    private static final Interpreter interpreter = new Interpreter();
     static boolean hadError = false;
+    static boolean hadRuntimeError = false;
 
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
@@ -29,6 +33,8 @@ public class Lox {
         // 終了コードによって、エラーを示す
         if (hadError)
             System.exit(65);
+        if (hadRuntimeError)
+            System.exit(70);
     }
 
     private static void runPrompt() throws IOException {
@@ -49,12 +55,22 @@ public class Lox {
         List<Token> tokens = scanner.scanTokens(); // Token のクラスが存在することを確認
 
         Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
+
+        List<Stmt> statements = parser.parse();
+        /*
+         * ↑ 置き換え前コード
+         * Expr expression = parser.parse();
+         */
 
         // Stop if there was a syntax error.
         if (hadError)
-            return;
+            interpreter.interpret(statements);
+        /*
+         * ↑ 置き換え前コード
+         * return;
+         */
 
+        interpreter.interpret(expression);
         System.out.println(new AstPrinter().print(expression));
 
         // トークンの印字
@@ -68,6 +84,13 @@ public class Lox {
 
     static void error(int line, String message) {
         report(line, "", message);
+    }
+
+    // 7.4.1~
+    static void runtimeError(RuntimeError error) {
+        System.err.println(error.getMessage() +
+                "\n[line " + error.token.line + "]");
+        hadRuntimeError = true;
     }
 
     private static void report(int line, String where, String message) {
